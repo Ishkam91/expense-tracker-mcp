@@ -11,10 +11,21 @@ from psycopg.rows import dict_row
 # 
 from fastmcp import FastMCP
 
+
+from fastmcp.server.auth.providers.github import GitHubProvider
+
 load_dotenv(Path(__file__).parent / ".env")
 DATABASE_URL = os.environ["DATABASE_URL"]
 
-mcp = FastMCP("expense-tracker")
+auth = None
+if os.environ.get("GITHUB_CLIENT_ID"):
+    auth = GitHubProvider(
+        client_id=os.environ["GITHUB_CLIENT_ID"],
+        client_secret=os.environ["GITHUB_CLIENT_SECRET"],
+        base_url=os.environ["BASE_URL"],
+    )
+
+mcp = FastMCP("expense-tracker", auth=auth)
 
 
 def get_conn():
