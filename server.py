@@ -8,10 +8,8 @@ from psycopg.rows import dict_row
 
 
 # Works with both the newer and the older mcp package
-try:
-    from mcp.server.mcpserver import MCPServer as FastMCP
-except ImportError:
-    from mcp.server.fastmcp import FastMCP
+# 
+from fastmcp import FastMCP
 
 load_dotenv(Path(__file__).parent / ".env")
 DATABASE_URL = os.environ["DATABASE_URL"]
@@ -184,6 +182,6 @@ def summarize_expenses(
 if __name__ == "__main__":
     init_db()
     if os.environ.get("PORT"):
-        mcp.run(transport="http", host="0.0.0.0", port=int(os.environ["PORT"]))
+        mcp.run(transport="streamable-http", host="0.0.0.0", port=int(os.environ["PORT"]))
     else:
         mcp.run()
